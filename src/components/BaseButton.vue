@@ -16,7 +16,7 @@
   cursor: pointer;
   border-radius: 10px;
   background: var(--gradient);
-  padding: 14px;
+  padding: 12px 14px;
   font-family: var(--font);
   font-size: 20px;
   font-weight:600;

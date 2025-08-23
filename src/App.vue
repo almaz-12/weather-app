@@ -12,16 +12,17 @@ const stats = [
 const citySelect = ref('Moscow');
 
 function getCity(city) {
+  console.log(city);
   citySelect.value = city;
 }
 </script>
 
 <template>
   <main class="main">
-    <div class="stat-list">
-      <StatList v-for="data in stats" :key="data.label" v-bind="data"/>
-    </div>
-    <SelectCity @select-сity="getCity"/>
+      <div class="stat-list">
+        <StatList v-for="data in stats" :key="data.label" v-bind="data"/>
+      </div>
+      <SelectCity @select-сity="getCity"/>
   </main>
 </template>
 
@@ -33,5 +34,6 @@ function getCity(city) {
   background: var(--color-bg-main);
   padding: 60px 50px;
   border-radius: 25px;
+  width: 513px;
 }
 </style>
