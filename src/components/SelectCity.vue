@@ -9,7 +9,7 @@ import AppInput from './AppInput.vue';
 const btnIcon = "Location";
 
 const isEditCity = ref(false);
-const cityName = ref('');
+const cityName = ref('Moscow');
 const emit = defineEmits(['selectCity']);
 
 function handleSelectCity() {

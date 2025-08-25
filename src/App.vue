@@ -1,28 +1,34 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import SelectCity from './components/SelectCity.vue';
 import StatList from './components/StatList.vue';
 
-const stats = [
-  { label: "Влажность", stat: "90%" },
-  { label: "Осадки", stat: "0%" },
-  { label: "Ветер", stat: "3 м/ч" },
-];
-
 const citySelect = ref('Moscow');
+const data = ref({
+  humidity: 90,
+  rain: 0,
+  wind: 3,
+});
+
+const dataModified = computed(() => {
+  return [
+    { label: "Влажность", stat: `${data.value.humidity}%` },
+    { label: "Осадки", stat: `${data.value.rain}%` },
+    { label: "Ветер", stat: `${data.value.wind}м/ч` },
+  ];
+});
 
 function getCity(city) {
-  console.log(city);
   citySelect.value = city;
 }
 </script>
 
 <template>
   <main class="main">
-      <div class="stat-list">
-        <StatList v-for="data in stats" :key="data.label" v-bind="data"/>
-      </div>
-      <SelectCity @select-сity="getCity"/>
+    <div class="stat-list">
+      <StatList v-for="data in dataModified" :key="data.label" v-bind="data"/>
+    </div>
+    <SelectCity @select-сity="getCity"/>
   </main>
 </template>
 
