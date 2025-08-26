@@ -1,16 +1,19 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import BaseButton from './BaseButton.vue';
 import AppIcon from '../icons/AppIcon.vue';
 import AppInput from './AppInput.vue';
 
-const btnIcon = "Location";
-
 const isEditCity = ref(false);
 const cityName = ref('Moscow');
-const emit = defineEmits(['selectCity']);
+const emit = defineEmits(['select-city']);
+
+onMounted(() => {
+  console.log(cityName.value);
+  emit('select-city',cityName.value);
+});
 
 function handleSelectCity() {
   isEditCity.value = true;
@@ -19,7 +22,7 @@ function handleSelectCity() {
 function handleEditCity() {
   isEditCity.value = false;
   console.log(cityName.value);
-  emit('selectCity',cityName.value);
+  emit('select-city',cityName.value);
 }
 </script>
 
@@ -31,7 +34,7 @@ function handleEditCity() {
     </BaseButton>
   </div>
   <BaseButton v-else @click="handleSelectCity">
-    <AppIcon :name="btnIcon"/>
+    <AppIcon name="Location"/>
     Изменить город
   </BaseButton>
 </template>
