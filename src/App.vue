@@ -4,19 +4,21 @@ import SelectCity from './components/SelectCity.vue';
 import StatList from './components/StatList.vue';
 
 import { APP_KEY } from '../env';
-import { API_ENDPOINT, API_DAYS, API_LANG } from './common/constants';
+import { API_ENDPOINT, API_DAYS, API_LANG, STAT_LABELS } from './common/constants';
 
-const weatherData = ref({});
+const weatherData = ref(null);
 const isLoading = ref(true);
+const errorMessage = ref(null);
 
 const weatherStats = computed(() => {
+  console.log(weatherData.value);
   if(!weatherData.value) {
     return [];
   }
   return [
-    { label: "Влажность", stat: `${weatherData.value.humidity}%` },
-    { label: "Облачность", stat: `${weatherData.value.cloud}%` },
-    { label: "Ветер", stat: `${weatherData.value.wind}м/ч` },
+    { label: STAT_LABELS.humidity, stat: `${weatherData.value.humidity} %` },
+    { label: STAT_LABELS.cloud, stat: `${weatherData.value.cloud} %` },
+    { label: STAT_LABELS.wind, stat: `${weatherData.value.wind} м/ч` },
   ];
 });
 
@@ -29,7 +31,9 @@ const fetchData = async (city) => {
   });
 
   try {
+    errorMessage.value = null;
     isLoading.value = true;
+
     const response = await fetch(`${API_ENDPOINT}/forecast.json?${query}`);
 
     if(!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
@@ -37,29 +41,30 @@ const fetchData = async (city) => {
     const data = await response.json();
 
     weatherData.value = {
-      humidity: data.current.humidity,
-      cloud: data.current.cloud,
-      wind: data.current.wind_kph,
+      humidity: data.current.humidity || 0,
+      cloud: data.current.cloud || 0,
+      wind: data.current.wind_kph || 0,
     };
-
-    isLoading.value = false;
 
     return data;
   } catch (error) {
-    console.error('Ошибка загрузки погоды:', error);
+    errorMessage.value = `Не удалось загрузить данные для города "${city}"`;
     throw new Error(`Не удалось загрузить данные для города "${city}". Причина: ${error.message}`);
+  } finally {
+    isLoading.value = false;
   }
 }
 
 async function getCity(city) {
-  const data = await fetchData(city);
+  await fetchData(city);
 }
 </script>
 
 <template>
   <main class="main">
     <div v-if="isLoading">Загрузка данных...</div>
-    <div class="stat-list" v-else>
+    <div v-else-if="errorMessage">{{ errorMessage }}</div>
+    <div class="stat-list" v-else-if="weatherStats.length">
       <StatList v-for="stat in weatherStats" :key="stat.label" v-bind="stat"/>
     </div>
     <SelectCity @select-city="getCity"/>
