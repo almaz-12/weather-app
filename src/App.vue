@@ -3,10 +3,8 @@ import { computed, ref } from 'vue';
 import SelectCity from './components/SelectCity.vue';
 import StatList from './components/StatList.vue';
 
-const APP_KEY = 'f7a646e051e643b69c742549252608';
-const API_DAYS = 3;
-const API_LANG = 'ru';
-const API_ENDPOINT = 'http://api.weatherapi.com/v1';
+import { APP_KEY } from '../env';
+import { API_ENDPOINT, API_DAYS, API_LANG } from './common/constants';
 
 const weatherData = ref({});
 const isLoading = ref(true);
