@@ -11,6 +11,7 @@
 .btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   border: none;
   cursor: pointer;

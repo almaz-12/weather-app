@@ -8,16 +8,16 @@ const API_DAYS = 3;
 const API_LANG = 'ru';
 const API_ENDPOINT = 'http://api.weatherapi.com/v1';
 
-const weatherData = ref({
-  humidity: 90,
-  rain: 0,
-  wind: 3,
-});
+const weatherData = ref({});
+const isLoading = ref(true);
 
 const weatherStats = computed(() => {
+  if(!weatherData.value) {
+    return [];
+  }
   return [
     { label: "Влажность", stat: `${weatherData.value.humidity}%` },
-    { label: "Осадки", stat: `${weatherData.value.rain}%` },
+    { label: "Облачность", stat: `${weatherData.value.cloud}%` },
     { label: "Ветер", stat: `${weatherData.value.wind}м/ч` },
   ];
 });
@@ -31,22 +31,22 @@ const fetchData = async (city) => {
   });
 
   try {
+    isLoading.value = true;
     const response = await fetch(`${API_ENDPOINT}/forecast.json?${query}`);
 
     if(!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
 
     const data = await response.json();
 
-    console.log(data);
-
     weatherData.value = {
       humidity: data.current.humidity,
-      rain: data.current.precip_mm,
+      cloud: data.current.cloud,
       wind: data.current.wind_kph,
     };
 
-    return data;
+    isLoading.value = false;
 
+    return data;
   } catch (error) {
     console.error('Ошибка загрузки погоды:', error);
     throw new Error(`Не удалось загрузить данные для города "${city}". Причина: ${error.message}`);
@@ -54,15 +54,14 @@ const fetchData = async (city) => {
 }
 
 async function getCity(city) {
-  console.log(city);
   const data = await fetchData(city);
-  console.log(data);
 }
 </script>
 
 <template>
   <main class="main">
-    <div class="stat-list">
+    <div v-if="isLoading">Загрузка данных...</div>
+    <div class="stat-list" v-else>
       <StatList v-for="stat in weatherStats" :key="stat.label" v-bind="stat"/>
     </div>
     <SelectCity @select-city="getCity"/>

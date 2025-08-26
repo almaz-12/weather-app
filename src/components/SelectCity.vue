@@ -28,7 +28,7 @@ function handleEditCity() {
 
 <template>
   <div class="form" v-if="isEditCity">
-    <AppInput v-model="cityName" placeholder="Введите город"/>
+    <AppInput v-model="cityName" @keyup.enter="handleEditCity" placeholder="Введите город"/>
     <BaseButton @click="handleEditCity">
       Сохранить
     </BaseButton>
