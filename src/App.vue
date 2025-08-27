@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import SelectCity from './components/SelectCity.vue';
 import StatList from './components/StatList.vue';
+import AppIcon from './icons/AppIcon.vue';
 
 import { APP_KEY } from '../env';
 import { API_ENDPOINT, API_DAYS, API_LANG, STAT_LABELS } from './common/constants';
@@ -11,7 +12,6 @@ const isLoading = ref(true);
 const errorMessage = ref(null);
 
 const weatherStats = computed(() => {
-  console.log(weatherData.value);
   if(!weatherData.value) {
     return [];
   }
@@ -41,15 +41,15 @@ const fetchData = async (city) => {
     const data = await response.json();
 
     weatherData.value = {
-      humidity: data.current.humidity || 0,
-      cloud: data.current.cloud || 0,
-      wind: data.current.wind_kph || 0,
+      humidity: data.current?.humidity || 0,
+      cloud: data.current?.cloud || 0,
+      wind: data.current?.wind_kph || 0,
     };
 
     return data;
   } catch (error) {
     errorMessage.value = `Не удалось загрузить данные для города "${city}"`;
-    throw new Error(`Не удалось загрузить данные для города "${city}". Причина: ${error.message}`);
+    throw error;
   } finally {
     isLoading.value = false;
   }
@@ -65,6 +65,8 @@ async function getCity(city) {
     <div v-if="isLoading">Загрузка данных...</div>
     <div v-else-if="errorMessage">{{ errorMessage }}</div>
     <div class="stat-list" v-else-if="weatherStats.length">
+      <AppIcon name="Sun" :size="30"/>
+      <AppIcon name="Cloud" color="red"/>
       <StatList v-for="stat in weatherStats" :key="stat.label" v-bind="stat"/>
     </div>
     <SelectCity @select-city="getCity"/>
