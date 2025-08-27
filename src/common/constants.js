@@ -8,3 +8,9 @@ export const STAT_LABELS = {
   cloud: "Облачность",
   wind: "Ветер"
 };
+
+export const WEATHER_ICON = {
+  1000: "Sun",
+  1009: "Rain",
+  1003: "Cloud"
+};

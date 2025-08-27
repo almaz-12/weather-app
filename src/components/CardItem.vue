@@ -1,0 +1,77 @@
+<script setup>
+  import { computed } from 'vue';
+  import { WEATHER_ICON } from '../common/constants';
+  import AppIcon from '../icons/AppIcon.vue';
+
+  const props = defineProps({
+    weatherCode: {
+      type: Number,
+      default: 1000,
+    },
+    day: {
+      type: String,
+      require: true,
+    },
+    temperature: {
+      type: Number,
+      require: true,
+    },
+
+  });
+
+  const tempFull = computed(() => {
+    return `${props.temperature} °C`;
+  });
+
+  const getWeatherIcon = computed(() => {
+    return WEATHER_ICON[props.weatherCode];
+  })
+
+  const getDayWeek = computed(() => {
+    return props.day.toLocaleDateString('ru-RU', { weekday: "short" });
+  })
+</script>
+
+<template>
+  <div class="card">
+    <div class="card__icon">
+      <AppIcon :name="getWeatherIcon"/>
+    </div>
+    <div class="card__day">{{ getDayWeek }}</div>
+    <div class="card__temperature">{{ tempFull }}</div>
+  </div>
+</template>
+
+<style scoped>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    padding: 17px 27px;
+    color: var(--color-primary);
+    background: var(--color-bg-card);
+    box-shadow: 1px 2px 4px 0px var(--color-bg-main);
+    border-radius: 10px;
+    transition: background ease-in .25s;
+    cursor: pointer;
+  }
+
+  .card__day {
+    font-size: 20px;
+  }
+
+  .card__temperature {
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  .card:hover {
+    background: #3A434F;
+  }
+
+  .card:first-child {
+    background: var(--color-primary);
+    color: var(--color-primary-inverted);
+  }
+</style>

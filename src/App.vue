@@ -2,7 +2,8 @@
 import { computed, ref } from 'vue';
 import SelectCity from './components/SelectCity.vue';
 import StatList from './components/StatList.vue';
-import AppIcon from './icons/AppIcon.vue';
+import CardList from './components/CardList.vue';
+import AppSidebar from './layouts/AppSidebar.vue';
 
 import { APP_KEY } from '../env';
 import { API_ENDPOINT, API_DAYS, API_LANG, STAT_LABELS } from './common/constants';
@@ -10,6 +11,27 @@ import { API_ENDPOINT, API_DAYS, API_LANG, STAT_LABELS } from './common/constant
 const weatherData = ref(null);
 const isLoading = ref(true);
 const errorMessage = ref(null);
+
+const dayTemperature = ref([
+  {
+    id: 0,
+    temperature: 23,
+    day: new Date(),
+    weatherCode: 1000,
+  },
+  {
+    id: 1,
+    temperature: 25,
+    day: new Date(),
+    weatherCode: 1003,
+  },
+  {
+    id: 2,
+    temperature: 13,
+    day: new Date(),
+    weatherCode: 1009,
+  }
+])
 
 const weatherStats = computed(() => {
   if(!weatherData.value) {
@@ -39,6 +61,7 @@ const fetchData = async (city) => {
     if(!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
 
     const data = await response.json();
+    console.log(data);
 
     weatherData.value = {
       humidity: data.current?.humidity || 0,
@@ -61,19 +84,25 @@ async function getCity(city) {
 </script>
 
 <template>
-  <main class="main">
-    <div v-if="isLoading">Загрузка данных...</div>
-    <div v-else-if="errorMessage">{{ errorMessage }}</div>
-    <div class="stat-list" v-else-if="weatherStats.length">
-      <AppIcon name="Sun" :size="30"/>
-      <AppIcon name="Cloud" color="red"/>
-      <StatList v-for="stat in weatherStats" :key="stat.label" v-bind="stat"/>
-    </div>
-    <SelectCity @select-city="getCity"/>
-  </main>
+  <div class="wrap">
+    <AppSidebar />
+    <main class="main">
+      <div v-if="isLoading">Загрузка данных...</div>
+      <div v-else-if="errorMessage">{{ errorMessage }}</div>
+      <div class="stat-list" v-else-if="weatherStats.length">
+        <StatList v-for="stat in weatherStats" :key="stat.label" v-bind="stat"/>
+      </div>
+      <CardList :stats="dayTemperature"/>
+      <SelectCity @select-city="getCity"/>
+    </main>
+  </div>
+
 </template>
 
 <style scoped>
+.wrap {
+  display: flex;
+}
 .main {
   display: flex;
   flex-direction: column;
