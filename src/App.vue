@@ -12,26 +12,7 @@ const weatherData = ref(null);
 const isLoading = ref(true);
 const errorMessage = ref(null);
 
-const dayTemperature = ref([
-  {
-    id: 0,
-    temperature: 23,
-    day: new Date(),
-    weatherCode: 1000,
-  },
-  {
-    id: 1,
-    temperature: 25,
-    day: new Date(),
-    weatherCode: 1003,
-  },
-  {
-    id: 2,
-    temperature: 13,
-    day: new Date(),
-    weatherCode: 1009,
-  }
-])
+const forecastDay = ref([])
 
 const weatherStats = computed(() => {
   if(!weatherData.value) {
@@ -69,6 +50,15 @@ const fetchData = async (city) => {
       wind: data.current?.wind_kph || 0,
     };
 
+    forecastDay.value = data.forecast?.forecastday.map((item) => {
+      return {
+        id: item.date,
+        day: new Date(item.date),
+        temperature: item.day.maxtemp_c,
+        weatherCode: item.day.condition?.code,
+      }
+    })
+
     return data;
   } catch (error) {
     errorMessage.value = `Не удалось загрузить данные для города "${city}"`;
@@ -89,10 +79,13 @@ async function getCity(city) {
     <main class="main">
       <div v-if="isLoading">Загрузка данных...</div>
       <div v-else-if="errorMessage">{{ errorMessage }}</div>
-      <div class="stat-list" v-else-if="weatherStats.length">
-        <StatList v-for="stat in weatherStats" :key="stat.label" v-bind="stat"/>
-      </div>
-      <CardList :stats="dayTemperature"/>
+      <template v-else-if="weatherStats.length && forecastDay.length">
+        <div class="stat-list" >
+          <StatList v-for="item in weatherStats" :key="item.date" v-bind="item"/>
+        </div>
+        <CardList :stats="forecastDay" />
+      </template>
+
       <SelectCity @select-city="getCity"/>
     </main>
   </div>

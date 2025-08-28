@@ -1,6 +1,6 @@
 <script setup>
   import { computed } from 'vue';
-  import { WEATHER_ICON } from '../common/constants';
+  import { WEATHER_ICON, WEATHER_ICON_DEFAULT } from '../common/constants';
   import AppIcon from '../icons/AppIcon.vue';
 
   const props = defineProps({
@@ -9,7 +9,7 @@
       default: 1000,
     },
     day: {
-      type: String,
+      type: Date,
       require: true,
     },
     temperature: {
@@ -24,7 +24,10 @@
   });
 
   const getWeatherIcon = computed(() => {
-    return WEATHER_ICON[props.weatherCode];
+    if(WEATHER_ICON[props.weatherCode]) {
+      return WEATHER_ICON[props.weatherCode];
+    }
+    return WEATHER_ICON_DEFAULT  ;
   })
 
   const getDayWeek = computed(() => {
@@ -73,5 +76,9 @@
   .card:first-child {
     background: var(--color-primary);
     color: var(--color-primary-inverted);
+  }
+
+  .card:first-child svg {
+    fill: var(--color-primary-inverted)!important;
   }
 </style>

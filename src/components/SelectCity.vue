@@ -1,7 +1,7 @@
 
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import BaseButton from './BaseButton.vue';
 import AppIcon from '../icons/AppIcon.vue';
 import AppInput from './AppInput.vue';
@@ -11,7 +11,6 @@ const cityName = ref('Moscow');
 const emit = defineEmits(['select-city']);
 
 onMounted(() => {
-  console.log(cityName.value);
   emit('select-city',cityName.value);
 });
 
@@ -19,9 +18,12 @@ function handleSelectCity() {
   isEditCity.value = true;
 }
 
+watch(cityName, newVal => {
+  console.log('этоработает watch '+newVal);
+})
+
 function handleEditCity() {
   isEditCity.value = false;
-  console.log(cityName.value);
   emit('select-city',cityName.value);
 }
 </script>

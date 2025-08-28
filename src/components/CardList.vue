@@ -18,6 +18,7 @@
 
 <style scoped>
   .card-list {
-    display: flex;
+        display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 </style>
