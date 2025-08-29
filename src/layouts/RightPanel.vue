@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, onMounted } from 'vue';
+  import { computed } from 'vue';
   import SelectCity from '../components/SelectCity.vue';
   import StatList from '../components/StatList.vue';
   import CardList from '../components/CardList.vue';
@@ -33,15 +33,6 @@ const weatherStats = computed(() => {
   ];
 });
 
-const emits = defineEmits(['get-city']);
-
-function getCity(city) {
-  emits('get-city', city)
-}
-
-onMounted(() => {
-console.log(props.weatherData)
-});
 </script>
 
 <template>
@@ -55,7 +46,7 @@ console.log(props.weatherData)
         <CardList :stats="props.weatherData.forecastday"/>
       </template>
 
-      <SelectCity @select-city="getCity"/>
+      <SelectCity />
     </div>
 </template>
 
@@ -63,12 +54,11 @@ console.log(props.weatherData)
 .right {
   display: flex;
   flex-direction: column;
-  gap: 70px;
+  gap: 50px;
   background: var(--color-bg-main);
-  padding: 60px 50px;
+  padding: 50px 40px;
   border-radius: 25px;
-  max-width: 513px;
-  width: 100%;
-  min-height: 625px;
+  width: 480px;
+  min-height: 68px;
 }
 </style>

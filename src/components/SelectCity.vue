@@ -1,33 +1,29 @@
 
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { inject, ref } from 'vue';
 import BaseButton from './BaseButton.vue';
 import AppIcon from '../icons/AppIcon.vue';
 import AppInput from './AppInput.vue';
 
 const isEditCity = ref(false);
-const cityName = ref('Moscow');
-const emit = defineEmits(['select-city']);
-
-onMounted(() => {
-  emit('select-city',cityName.value);
-});
+const cityName = inject("cityName")
+const cityValue = ref(cityName.value)
 
 function handleSelectCity() {
-  isEditCity.value = true;
+  isEditCity.value = true
 }
 
 function handleEditCity() {
-  isEditCity.value = false;
-  emit('select-city',cityName.value);
+  isEditCity.value = false
+  cityName.value = cityValue.value
 }
 
 </script>
 
 <template>
   <div class="form" v-if="isEditCity">
-    <AppInput v-model="cityName" v-focus @keyup.enter="handleEditCity" placeholder="Введите город"/>
+    <AppInput v-model="cityValue" v-focus @keyup.enter="handleEditCity" placeholder="Введите город"/>
     <BaseButton @click="handleEditCity">
       Сохранить
     </BaseButton>

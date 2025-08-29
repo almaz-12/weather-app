@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, provide, ref, watch } from 'vue';
 
 import LeftPanel from './layouts/LeftPanel.vue';
 import RightPanel from './layouts/RightPanel.vue';
@@ -10,11 +10,14 @@ import { API_ENDPOINT, API_DAYS, API_LANG } from './common/constants';
 const weatherData = ref({});
 const isLoading = ref(true);
 const errorMessage = ref('');
+const cityName = ref('Казань');
+
+provide('cityName', cityName);
 
 const fetchData = async (city) => {
   const query = new URLSearchParams({
     key: APP_KEY,
-    q: city,
+    q: cityName.value,
     days: API_DAYS,
     lang: API_LANG,
   });
@@ -57,8 +60,12 @@ async function getCity(city) {
   await fetchData(city);
 }
 
+watch(cityName, () => {
+  getCity(cityName.value)
+})
+
 onMounted(() => {
-  console.log(1);
+  getCity(cityName.value);
 })
 </script>
 
@@ -69,7 +76,6 @@ onMounted(() => {
       :error-message="errorMessage"
       :weather-data="weatherData"
       :is-loading="isLoading"
-      @get-city="getCity"
     />
   </main>
 </template>
