@@ -10,13 +10,16 @@
     },
     day: {
       type: Date,
-      require: true,
+      required: true,
     },
     temperature: {
       type: Number,
-      require: true,
+      required: true,
     },
-
+    isActive: {
+      type: Boolean,
+      required: true,
+    }
   });
 
   const tempFull = computed(() => {
@@ -36,7 +39,7 @@
 </script>
 
 <template>
-  <div class="card">
+  <div class="card" :class="{'active':isActive}">
     <div class="card__icon">
       <AppIcon :name="getWeatherIcon"/>
     </div>
@@ -72,13 +75,8 @@
   .card:hover {
     background: #3A434F;
   }
-
-  .card:first-child {
+  .card.active {
     background: var(--color-primary);
     color: var(--color-primary-inverted);
-  }
-
-  .card:first-child svg {
-    fill: var(--color-primary-inverted)!important;
   }
 </style>
