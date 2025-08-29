@@ -1,29 +1,15 @@
 <script setup>
-import { computed, ref } from 'vue';
-import SelectCity from './components/SelectCity.vue';
-import StatList from './components/StatList.vue';
-import CardList from './components/CardList.vue';
-import AppSidebar from './layouts/AppSidebar.vue';
+import { onMounted, ref } from 'vue';
+
+import LeftPanel from './layouts/LeftPanel.vue';
+import RightPanel from './layouts/RightPanel.vue';
 
 import { APP_KEY } from '../env';
-import { API_ENDPOINT, API_DAYS, API_LANG, STAT_LABELS } from './common/constants';
+import { API_ENDPOINT, API_DAYS, API_LANG } from './common/constants';
 
-const weatherData = ref(null);
+const weatherData = ref({});
 const isLoading = ref(true);
-const errorMessage = ref(null);
-
-const forecastDay = ref([])
-
-const weatherStats = computed(() => {
-  if(!weatherData.value) {
-    return [];
-  }
-  return [
-    { label: STAT_LABELS.humidity, stat: `${weatherData.value.humidity} %` },
-    { label: STAT_LABELS.cloud, stat: `${weatherData.value.cloud} %` },
-    { label: STAT_LABELS.wind, stat: `${weatherData.value.wind} м/ч` },
-  ];
-});
+const errorMessage = ref('');
 
 const fetchData = async (city) => {
   const query = new URLSearchParams({
@@ -50,7 +36,7 @@ const fetchData = async (city) => {
       wind: data.current?.wind_kph || 0,
     };
 
-    forecastDay.value = data.forecast?.forecastday.map((item) => {
+    weatherData.value.forecastday = data.forecast?.forecastday.map((item) => {
       return {
         id: item.date,
         day: new Date(item.date),
@@ -67,42 +53,30 @@ const fetchData = async (city) => {
     isLoading.value = false;
   }
 }
-
 async function getCity(city) {
   await fetchData(city);
 }
+
+onMounted(() => {
+  console.log(1);
+})
 </script>
 
 <template>
-  <div class="wrap">
-    <AppSidebar />
-    <main class="main">
-      <div v-if="isLoading">Загрузка данных...</div>
-      <div v-else-if="errorMessage">{{ errorMessage }}</div>
-      <template v-else-if="weatherStats.length && forecastDay.length">
-        <div class="stat-list" >
-          <StatList v-for="item in weatherStats" :key="item.date" v-bind="item"/>
-        </div>
-        <CardList :stats="forecastDay" />
-      </template>
-
-      <SelectCity @select-city="getCity"/>
-    </main>
-  </div>
-
+  <main class="wrap">
+    <!-- <LeftPanel city="Moscow"/> -->
+    <RightPanel
+      :error-message="errorMessage"
+      :weather-data="weatherData"
+      :is-loading="isLoading"
+      @get-city="getCity"
+    />
+  </main>
 </template>
 
 <style scoped>
 .wrap {
   display: flex;
 }
-.main {
-  display: flex;
-  flex-direction: column;
-  gap: 70px;
-  background: var(--color-bg-main);
-  padding: 60px 50px;
-  border-radius: 25px;
-  width: 513px;
-}
+
 </style>

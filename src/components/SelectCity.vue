@@ -18,24 +18,21 @@ function handleSelectCity() {
   isEditCity.value = true;
 }
 
-watch(cityName, newVal => {
-  console.log('этоработает watch '+newVal);
-})
-
 function handleEditCity() {
   isEditCity.value = false;
   emit('select-city',cityName.value);
 }
+
 </script>
 
 <template>
   <div class="form" v-if="isEditCity">
-    <AppInput v-model="cityName" @keyup.enter="handleEditCity" placeholder="Введите город"/>
+    <AppInput v-model="cityName" v-focus @keyup.enter="handleEditCity" placeholder="Введите город"/>
     <BaseButton @click="handleEditCity">
       Сохранить
     </BaseButton>
   </div>
-  <BaseButton v-else @click="handleSelectCity">
+  <BaseButton v-else @click="handleSelectCity" class="main-btn">
     <AppIcon name="Location"/>
     Изменить город
   </BaseButton>
@@ -47,5 +44,7 @@ function handleEditCity() {
   align-items: stretch;
   gap: 12px;
 }
-
+.main-btn {
+  margin-top: auto;
+}
 </style>
