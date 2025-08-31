@@ -37,7 +37,7 @@
       v-focus
       @keyup.enter="handleEditCity"
       placeholder="Введите город"
-      :class="{'error': errorMessage}"
+      :class="{error: errorMessage}"
     />
     <BaseButton @click="handleEditCity">
       Сохранить
