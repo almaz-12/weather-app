@@ -2,7 +2,9 @@
 export const API_ENDPOINT = 'http://api.weatherapi.com/v1';
 export const API_DAYS = 3;
 export const API_LANG = 'ru';
-export const WEATHER_ICON_DEFAULT = "Rain";
+export const WEATHER_ICON_DEFAULT = 'Rain';
+export const CITY_PROVIDE = Symbol('city');
+export const ACTIVE_INDEX = Symbol('active-index');
 
 export const STAT_LABELS = {
   humidity: "Влажность",

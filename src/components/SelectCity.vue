@@ -5,9 +5,10 @@ import { inject, ref } from 'vue';
 import BaseButton from './BaseButton.vue';
 import AppIcon from '../icons/AppIcon.vue';
 import AppInput from './AppInput.vue';
+import { CITY_PROVIDE } from '../common/constants';
 
 const isEditCity = ref(false);
-const cityName = inject("cityName")
+const cityName = inject(CITY_PROVIDE)
 const cityValue = ref(cityName.value)
 
 function handleSelectCity() {

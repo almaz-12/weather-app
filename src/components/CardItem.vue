@@ -2,6 +2,9 @@
   import { computed } from 'vue';
   import { WEATHER_ICON, WEATHER_ICON_DEFAULT } from '../common/constants';
   import AppIcon from '../icons/AppIcon.vue';
+  import { useDateFormatter } from '../composables/useDateFormatter';
+
+  const { formatWeekday } = useDateFormatter();
 
   const props = defineProps({
     weatherCode: {
@@ -34,7 +37,7 @@
   })
 
   const getDayWeek = computed(() => {
-    return props.day.toLocaleDateString('ru-RU', { weekday: "short" });
+    return formatWeekday(props.day);
   })
 </script>
 

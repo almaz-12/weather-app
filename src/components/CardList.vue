@@ -1,6 +1,7 @@
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, inject } from 'vue';
   import CardItem from './CardItem.vue';
+import { ACTIVE_INDEX } from '../common/constants';
 
   const props = defineProps({
     stats: {
@@ -9,7 +10,7 @@
     },
   });
 
-  const activeIndex = ref(0);
+  const activeIndex = inject(ACTIVE_INDEX);
 
   function setActiveIndex(index) {
     activeIndex.value = index
@@ -31,7 +32,7 @@
 
 <style scoped>
   .card-list {
-        display: grid;
+    display: grid;
     grid-template-columns: 1fr 1fr 1fr;
   }
 </style>

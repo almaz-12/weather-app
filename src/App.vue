@@ -5,19 +5,21 @@ import LeftPanel from './layouts/LeftPanel.vue';
 import RightPanel from './layouts/RightPanel.vue';
 
 import { APP_KEY } from '../env';
-import { API_ENDPOINT, API_DAYS, API_LANG } from './common/constants';
+import { API_ENDPOINT, API_DAYS, API_LANG, CITY_PROVIDE, ACTIVE_INDEX } from './common/constants';
 
 const weatherData = ref({});
 const isLoading = ref(true);
 const errorMessage = ref('');
 const cityName = ref('Казань');
+const activeIndex = ref(0);
 
-provide('cityName', cityName);
+provide(CITY_PROVIDE, cityName);
+provide(ACTIVE_INDEX, activeIndex);
 
 const fetchData = async (city) => {
   const query = new URLSearchParams({
     key: APP_KEY,
-    q: cityName.value,
+    q: city,
     days: API_DAYS,
     lang: API_LANG,
   });
@@ -34,17 +36,18 @@ const fetchData = async (city) => {
     console.log(data);
 
     weatherData.value = {
-      humidity: data.current?.humidity || 0,
-      cloud: data.current?.cloud || 0,
-      wind: data.current?.wind_kph || 0,
+      humidity: data.current?.humidity ?? 0,
+      cloud: data.current?.cloud ?? 0,
+      wind: data.current?.wind_kph ?? 0,
     };
 
     weatherData.value.forecastday = data.forecast?.forecastday.map((item) => {
       return {
         id: item.date,
         day: new Date(item.date),
-        temperature: item.day.maxtemp_c,
-        weatherCode: item.day.condition?.code,
+        temperature: item.day.maxtemp_c ?? 0,
+        weatherCode: item.day.condition?.code ?? 0,
+        weatherText: item.day.condition?.text ?? '',
       }
     })
 
@@ -60,8 +63,8 @@ async function getCity(city) {
   await fetchData(city);
 }
 
-watch(cityName, () => {
-  getCity(cityName.value)
+watch(cityName, (newCity) => {
+  getCity(newCity)
 })
 
 onMounted(() => {
@@ -71,7 +74,11 @@ onMounted(() => {
 
 <template>
   <main class="wrap">
-    <!-- <LeftPanel city="Moscow"/> -->
+    <LeftPanel
+      v-if="weatherData && weatherData.forecastday"
+      :city="cityName"
+      :day-data="weatherData.forecastday[activeIndex]"
+    />
     <RightPanel
       :error-message="errorMessage"
       :weather-data="weatherData"
