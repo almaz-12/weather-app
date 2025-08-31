@@ -5,4 +5,4 @@ export const useDateFormatter = () => {
   };
 
   return { formatWeekday };
-};
+}

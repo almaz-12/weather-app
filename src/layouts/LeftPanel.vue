@@ -36,14 +36,14 @@ import { WEATHER_ICON, WEATHER_ICON_DEFAULT } from '../common/constants';
   })
 
    const getWeatherIcon = computed(() => {
-    if(WEATHER_ICON[props.dayData.weatherCode]) {
-      return WEATHER_ICON[props.dayData.weatherCode];
+    if(WEATHER_ICON[props.dayData?.weatherCode]) {
+      return WEATHER_ICON[props.dayData?.weatherCode];
     }
     return WEATHER_ICON_DEFAULT  ;
   })
 
   const tempFull = computed(() => {
-    return `${props.dayData.temperature} °C`;
+    return `${props.dayData?.temperature} °C`;
   });
 </script>
 

@@ -19,7 +19,7 @@ import { ACTIVE_INDEX } from '../common/constants';
 </script>
 
 <template>
-  <div class="card-list">
+  <div class="card-list" v-if="props.stats">
     <CardItem
       v-for="(item, index) in props.stats"
       :key="item.id"

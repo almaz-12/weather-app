@@ -1,10 +1,10 @@
 <script setup>
-  import { computed } from 'vue';
+  import { computed, inject } from 'vue';
   import SelectCity from '../components/SelectCity.vue';
   import StatList from '../components/StatList.vue';
   import CardList from '../components/CardList.vue';
 
-import { STAT_LABELS } from '../common/constants';
+  import { STAT_LABELS, ACTIVE_INDEX } from '../common/constants';
 
   const props = defineProps({
     weatherData: {
@@ -20,18 +20,21 @@ import { STAT_LABELS } from '../common/constants';
       default: true,
     }
   })
+  const activeIndex = inject(ACTIVE_INDEX);
 
+  const weatherStats = computed(() => {
+    if(!props.weatherData) {
+      return [];
+    }
 
-const weatherStats = computed(() => {
-  if(!props.weatherData) {
-    return [];
-  }
-  return [
-    { label: STAT_LABELS.humidity, stat: `${props.weatherData.humidity} %` },
-    { label: STAT_LABELS.cloud, stat: `${props.weatherData.cloud} %` },
-    { label: STAT_LABELS.wind, stat: `${props.weatherData.wind} м/ч` },
-  ];
-});
+    const current = props.weatherData[activeIndex.value];
+
+    return [
+      { label: STAT_LABELS.humidity, stat: `${current.humidity} %` },
+      { label: STAT_LABELS.cloud, stat: `${current.cloud} %` },
+      { label: STAT_LABELS.wind, stat: `${current.wind} м/ч` },
+    ];
+  });
 
 </script>
 
@@ -43,7 +46,7 @@ const weatherStats = computed(() => {
         <div class="stat-list" >
           <StatList v-for="item in weatherStats" :key="item.date" v-bind="item"/>
         </div>
-        <CardList :stats="props.weatherData.forecastday"/>
+        <CardList :stats="props.weatherData"/>
       </template>
 
       <SelectCity />

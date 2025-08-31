@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-size: 28px;
+  font-size: 24px;
 }
 .stat + .stat {
   margin-top: 16px;

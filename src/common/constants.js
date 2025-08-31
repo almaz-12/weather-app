@@ -8,13 +8,16 @@ export const ACTIVE_INDEX = Symbol('active-index');
 
 export const STAT_LABELS = {
   humidity: "Влажность",
-  cloud: "Облачность",
+  cloud: "Вероятность дождя",
   wind: "Ветер"
 };
-
+/**
+ * Коды погодных условий и соответствующие им иконки
+ * @see https://www.weatherapi.com/docs/weather_conditions.json
+ */
 export const WEATHER_ICON = {
-  1000: "Sun",
-  1009: "Rain",
-  1063: "Rain",
-  1003: "Cloud"
+  1000: "Sun",     // Ясно
+  1003: "Cloud",   // Переменная облачность
+  1009: "Rain",    // Пасмурно
+  1063: "Rain",    // Возможен дождь
 };
