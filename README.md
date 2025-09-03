@@ -26,7 +26,7 @@
 
 ```
 # Клонирование репозитория
-git clone https://github.com/your-username/weathervue.git
+git clone https://github.com/almaz-12/weather-app.git
 
 # Установка зависимостей
 npm install
