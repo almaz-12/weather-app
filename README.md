@@ -36,15 +36,12 @@ npm run dev
 
 # Сборка для production
 npm run build
-
-# Превью production сборки
-npm run preview
 ```
 
 ## ⚙️ Конфигурация
 
 Создайте файл env.js в корневой директории:
-
+```
 export const APP_KEY = 'your_weatherapi_key_here';
-
+```
 Получите API ключ на [WeatherAPI.com](https://www.weatherapi.com/)
